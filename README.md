@@ -1,24 +1,61 @@
-# Universal Document Translator
+# 🌍 Universal Document Translator
 
-A desktop application built with Python and CustomTkinter that translates Microsoft Word documents while preserving formatting.
+A desktop application built with Python and CustomTkinter to translate Microsoft Word (.docx) documents into multiple languages while preserving formatting.
 
-## Features
+## ✨ Features
 
-- Select Word (.docx) files
-- Source language selection
-- Target language selection
-- Support for multiple Indian languages
-- Preserve document formatting
-- Kruti Dev support (planned)
-- Batch translation (planned)
+- 📄 Select Word documents
+- 🌐 Source language selection
+- 🌐 Target language selection
+- 📖 Read document content
+- 🔄 Translate Word documents (In Progress)
+- 💾 Save translated document (Planned)
+- 🎨 Preserve formatting (Planned)
+- 📂 Batch document translation (Planned)
 
-## Technologies
+---
+
+## 🛠 Tech Stack
 
 - Python
 - CustomTkinter
 - python-docx
-- Deep Translator
+- Git & GitHub
 
-## Status
+---
 
-🚧 Under Development
+## 📌 Roadmap
+
+### ✅ Version 1.0
+- [x] GUI
+- [x] File Picker
+- [x] Source Language Dropdown
+- [x] Target Language Dropdown
+- [x] Read Word Document
+
+### 🚧 Version 1.1
+- [ ] Translate Document
+- [ ] Save New Document
+
+### 🚧 Version 1.2
+- [ ] Preserve Formatting
+- [ ] Translate Tables
+
+### 🚧 Version 2.0
+- [ ] Batch Translation
+- [ ] Progress Bar
+- [ ] Export as EXE
+
+---
+
+## 📷 Screenshots
+
+*Coming Soon*
+
+---
+
+## 👨‍💻 Author
+
+**Abdullah Ansari**
+
+GitHub: https://github.com/Abdullah-Ansar
