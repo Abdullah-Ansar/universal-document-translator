@@ -1,8 +1,11 @@
+import os
 import customtkinter as ctk
 from tkinter import filedialog
 
 from config import LANGUAGES
 from services.document_handler import DocumentHandler
+from services.translator import TranslatorService
+
 
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
@@ -22,9 +25,9 @@ class UniversalTranslatorApp(ctk.CTk):
 
     def build_ui(self):
 
-        # =========================
+        # ==========================
         # Title
-        # =========================
+        # ==========================
         title = ctk.CTkLabel(
             self,
             text="Universal Document Translator",
@@ -32,9 +35,9 @@ class UniversalTranslatorApp(ctk.CTk):
         )
         title.pack(pady=20)
 
-        # =========================
-        # Select File Button
-        # =========================
+        # ==========================
+        # Select File
+        # ==========================
         select_button = ctk.CTkButton(
             self,
             text="📄 Select Word File",
@@ -44,9 +47,6 @@ class UniversalTranslatorApp(ctk.CTk):
         )
         select_button.pack(pady=15)
 
-        # =========================
-        # Selected File Label
-        # =========================
         self.file_label = ctk.CTkLabel(
             self,
             text="No file selected",
@@ -54,9 +54,9 @@ class UniversalTranslatorApp(ctk.CTk):
         )
         self.file_label.pack()
 
-        # =========================
+        # ==========================
         # Source Language
-        # =========================
+        # ==========================
         source_label = ctk.CTkLabel(
             self,
             text="Source Language"
@@ -70,9 +70,9 @@ class UniversalTranslatorApp(ctk.CTk):
         self.source_menu.set("Kruti Dev Hindi")
         self.source_menu.pack()
 
-        # =========================
+        # ==========================
         # Target Language
-        # =========================
+        # ==========================
         target_label = ctk.CTkLabel(
             self,
             text="Target Language"
@@ -86,9 +86,9 @@ class UniversalTranslatorApp(ctk.CTk):
         self.target_menu.set("Assamese")
         self.target_menu.pack()
 
-        # =========================
+        # ==========================
         # Read Button
-        # =========================
+        # ==========================
         read_button = ctk.CTkButton(
             self,
             text="📖 Read Document",
@@ -96,9 +96,9 @@ class UniversalTranslatorApp(ctk.CTk):
         )
         read_button.pack(pady=20)
 
-        # =========================
+        # ==========================
         # Translate Button
-        # =========================
+        # ==========================
         translate_button = ctk.CTkButton(
             self,
             text="🌐 Translate Document",
@@ -107,9 +107,9 @@ class UniversalTranslatorApp(ctk.CTk):
         )
         translate_button.pack(pady=10)
 
-    # =====================================
+    # ==========================
     # Select File
-    # =====================================
+    # ==========================
     def select_file(self):
 
         self.selected_file = filedialog.askopenfilename(
@@ -119,9 +119,9 @@ class UniversalTranslatorApp(ctk.CTk):
         if self.selected_file:
             self.file_label.configure(text=self.selected_file)
 
-    # =====================================
+    # ==========================
     # Read Document
-    # =====================================
+    # ==========================
     def read_file(self):
 
         if self.selected_file == "":
@@ -130,31 +130,68 @@ class UniversalTranslatorApp(ctk.CTk):
 
         handler = DocumentHandler(self.selected_file)
 
-        paragraphs = handler.get_paragraphs()
-
         print("=" * 60)
 
-        for paragraph in paragraphs:
+        for paragraph in handler.get_paragraphs():
+
             if paragraph.text.strip():
                 print(paragraph.text)
 
         print("=" * 60)
-
         print("Source :", self.source_menu.get())
         print("Target :", self.target_menu.get())
 
-    # =====================================
+    # ==========================
     # Translate Document
-    # =====================================
+    # ==========================
     def translate_document(self):
 
         if self.selected_file == "":
             self.file_label.configure(text="Please select a document.")
             return
 
+        source = LANGUAGES[self.source_menu.get()]
+        target = LANGUAGES[self.target_menu.get()]
+
+        handler = DocumentHandler(self.selected_file)
+        translator = TranslatorService()
+
+        document = handler.get_document()
+
+        # Translate all paragraphs
+        for paragraph in document.paragraphs:
+
+            if paragraph.text.strip():
+
+                try:
+                    translated_text = translator.translate(
+                        paragraph.text,
+                        source,
+                        target
+                    )
+
+                    paragraph.text = translated_text
+
+                except Exception as e:
+                    print("Translation Error:", e)
+
+        # Save translated document
+        os.makedirs("output", exist_ok=True)
+
+        filename = os.path.basename(self.selected_file)
+
+        output_path = os.path.join(
+            "output",
+            f"translated_{filename}"
+        )
+
+        handler.save(output_path)
+
         print("=" * 60)
-        print("Translation Started...")
-        print("File    :", self.selected_file)
-        print("Source  :", self.source_menu.get())
-        print("Target  :", self.target_menu.get())
+        print("Translation Completed")
+        print("Saved to:", output_path)
         print("=" * 60)
+
+        self.file_label.configure(
+            text=f"✅ Translation Completed\n\n{output_path}"
+        )

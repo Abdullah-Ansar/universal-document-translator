@@ -6,6 +6,9 @@ class DocumentHandler:
     def __init__(self, file_path):
         self.document = Document(file_path)
 
+    def get_document(self):
+        return self.document
+
     def get_paragraphs(self):
         return self.document.paragraphs
 
