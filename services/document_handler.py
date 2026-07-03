@@ -1,25 +1,16 @@
 from docx import Document
 
 
-def read_document(file_path):
+class DocumentHandler:
 
-    doc = Document(file_path)
+    def __init__(self, file_path):
+        self.document = Document(file_path)
 
-    data = []
+    def get_paragraphs(self):
+        return self.document.paragraphs
 
-    for para in doc.paragraphs:
+    def get_tables(self):
+        return self.document.tables
 
-        if para.text.strip():
-            data.append(para.text)
-
-    for table in doc.tables:
-
-        for row in table.rows:
-
-            for cell in row.cells:
-
-                if cell.text.strip():
-
-                    data.append(cell.text)
-
-    return data
+    def save(self, output_path):
+        self.document.save(output_path)

@@ -1,11 +1,11 @@
 import customtkinter as ctk
 from tkinter import filedialog
 
-from services.document_handler import read_document
 from config import LANGUAGES
+from services.document_handler import DocumentHandler
+
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
-
 
 
 class UniversalTranslatorApp(ctk.CTk):
@@ -22,6 +22,9 @@ class UniversalTranslatorApp(ctk.CTk):
 
     def build_ui(self):
 
+        # =========================
+        # Title
+        # =========================
         title = ctk.CTkLabel(
             self,
             text="Universal Document Translator",
@@ -29,6 +32,9 @@ class UniversalTranslatorApp(ctk.CTk):
         )
         title.pack(pady=20)
 
+        # =========================
+        # Select File Button
+        # =========================
         select_button = ctk.CTkButton(
             self,
             text="📄 Select Word File",
@@ -38,6 +44,9 @@ class UniversalTranslatorApp(ctk.CTk):
         )
         select_button.pack(pady=15)
 
+        # =========================
+        # Selected File Label
+        # =========================
         self.file_label = ctk.CTkLabel(
             self,
             text="No file selected",
@@ -45,6 +54,9 @@ class UniversalTranslatorApp(ctk.CTk):
         )
         self.file_label.pack()
 
+        # =========================
+        # Source Language
+        # =========================
         source_label = ctk.CTkLabel(
             self,
             text="Source Language"
@@ -55,8 +67,12 @@ class UniversalTranslatorApp(ctk.CTk):
             self,
             values=list(LANGUAGES.keys())
         )
+        self.source_menu.set("Kruti Dev Hindi")
         self.source_menu.pack()
 
+        # =========================
+        # Target Language
+        # =========================
         target_label = ctk.CTkLabel(
             self,
             text="Target Language"
@@ -70,6 +86,9 @@ class UniversalTranslatorApp(ctk.CTk):
         self.target_menu.set("Assamese")
         self.target_menu.pack()
 
+        # =========================
+        # Read Button
+        # =========================
         read_button = ctk.CTkButton(
             self,
             text="📖 Read Document",
@@ -77,6 +96,9 @@ class UniversalTranslatorApp(ctk.CTk):
         )
         read_button.pack(pady=20)
 
+        # =========================
+        # Translate Button
+        # =========================
         translate_button = ctk.CTkButton(
             self,
             text="🌐 Translate Document",
@@ -85,18 +107,9 @@ class UniversalTranslatorApp(ctk.CTk):
         )
         translate_button.pack(pady=10)
 
-    def translate_document(self):
-
-        if self.selected_file == "":
-            self.file_label.configure(text="Please select a document.")
-            return
-
-        print("=" * 60)
-        print("Translation Started...")
-        print("Source :", self.source_menu.get())
-        print("Target :", self.target_menu.get())
-        print("=" * 60)
-
+    # =====================================
+    # Select File
+    # =====================================
     def select_file(self):
 
         self.selected_file = filedialog.askopenfilename(
@@ -106,20 +119,42 @@ class UniversalTranslatorApp(ctk.CTk):
         if self.selected_file:
             self.file_label.configure(text=self.selected_file)
 
+    # =====================================
+    # Read Document
+    # =====================================
     def read_file(self):
 
         if self.selected_file == "":
             self.file_label.configure(text="Please select a document.")
             return
 
-        data = read_document(self.selected_file)
+        handler = DocumentHandler(self.selected_file)
+
+        paragraphs = handler.get_paragraphs()
 
         print("=" * 60)
 
-        for line in data:
-            print(line)
+        for paragraph in paragraphs:
+            if paragraph.text.strip():
+                print(paragraph.text)
 
         print("=" * 60)
 
         print("Source :", self.source_menu.get())
         print("Target :", self.target_menu.get())
+
+    # =====================================
+    # Translate Document
+    # =====================================
+    def translate_document(self):
+
+        if self.selected_file == "":
+            self.file_label.configure(text="Please select a document.")
+            return
+
+        print("=" * 60)
+        print("Translation Started...")
+        print("File    :", self.selected_file)
+        print("Source  :", self.source_menu.get())
+        print("Target  :", self.target_menu.get())
+        print("=" * 60)
