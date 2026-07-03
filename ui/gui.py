@@ -2,25 +2,10 @@ import customtkinter as ctk
 from tkinter import filedialog
 
 from services.document_handler import read_document
-
+from config import LANGUAGES
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
 
-LANGUAGES = {
-    "Kruti Dev Hindi": "krutidev",
-    "Hindi (Unicode)": "hi",
-    "English": "en",
-    "Assamese": "as",
-    "Bengali": "bn",
-    "Marathi": "mr",
-    "Gujarati": "gu",
-    "Punjabi": "pa",
-    "Tamil": "ta",
-    "Telugu": "te",
-    "Malayalam": "ml",
-    "Kannada": "kn",
-    "Odia": "or"
-}
 
 
 class UniversalTranslatorApp(ctk.CTk):
